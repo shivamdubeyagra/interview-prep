@@ -65,7 +65,7 @@ const obj = {
   
   console.log("End");
   console.log(x);
-  */
+  *
   const crypto = require("crypto");
 
   console.log("Start");
@@ -77,4 +77,69 @@ const obj = {
       console.log(`${i}: Done in`, Date.now() - start, "ms");
     });
   }
-  
+  *
+ function flattenArray(arr){
+    return arr.reduce((acc, val) => {
+        if(Array.isArray(val)){
+            return acc.concat(flattenArray(val));
+        }
+        return acc.concat(val);
+    }, []);
+    // let result = [];
+    // for(let item of arr){
+    //   if(Array.isArray(item)){
+    //     result = result.concat(flattenArray(item));
+    //   }else{
+    //     result.push(item);
+    //   }
+    // }
+    // return result;
+ }
+ console.log(flattenArray([1,2,3,[4,5,6,[7,8,9]]]));
+ *
+ function flattenArray(arr) {
+  let stack = [...arr];
+  let result = [];
+
+  while (stack.length) {
+    let item = stack.pop();
+    if (Array.isArray(item)) {
+      stack.push(...item); // spread nested array into stack
+    } else {
+      result.push(item);
+    }
+  }
+
+  return result.reverse(); // reverse because stack reverses order
+}
+
+console.log(flattenArray([1, [2, [3, [4]], 5]]));
+// Output: [1, 2, 3, 4, 5]
+*/
+
+function flattenObject(obj, parentKey = "", result = {}) {
+  for (let key in obj) {
+    const newKey = parentKey ? `${parentKey}.${key}` : key;
+
+    if (typeof obj[key] === "object" && obj[key] !== null && !Array.isArray(obj[key])) {
+      flattenObject(obj[key], newKey, result); // recursive call
+    } else {
+      result[newKey] = obj[key];
+    }
+  }
+  return result;
+}
+
+const obj = {
+  name: "Shivam",
+  address: {
+    city: "Agra",
+    state: {
+      code: "UP",
+      pincode: 282005
+    },
+    agra:[1,2,3,{name2:"shivam"}]
+  }
+};
+
+console.log(flattenObject(obj));
